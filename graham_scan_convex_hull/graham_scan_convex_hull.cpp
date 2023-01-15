@@ -93,16 +93,17 @@ struct BinaryHeap {
 };
 
 struct Point {
+    int index;
     double x;
     double y;
 
     Point operator-(Point p) {
-        Point tmp{ this->x - p.x, this->y - p.y };
+        Point tmp{ this->index, this->x - p.x, this->y - p.y };
         return tmp;
     }
 
     Point operator+(Point p) {
-        Point tmp{ this->x + p.x, this->y + p.y };
+        Point tmp{ this->index, this->x + p.x, this->y + p.y };
         return tmp;
     }
 };
@@ -229,7 +230,7 @@ DynamicArray<Point>* pointsFromFile(string filename) {
     for (int i = 0; i < number_of_points; i++) {
         plik >> x >> y;
         //cout << x << ' ' << y << '\n';
-        Point tmp{ x, y };
+        Point tmp{i, x, y };
         points->add(tmp);
     }
     //cout << points->size;
@@ -293,7 +294,8 @@ DynamicArray<Point> graham_scan(DynamicArray<Point>* points) {
     }
 
     for (int i = 0; i < convex_hull->getSize(); i++) {
-        cout << i+1 << ". " << convex_hull->get(i).x << ' ' << convex_hull->get(i).y << '\n';
+        Point tmp = convex_hull->get(i);
+        cout << i+1 << ". Index punktu: " << tmp.index << " współrzędne punktu: " << tmp.x << ' ' << tmp.y << '\n';
     }
 
     delete points_copy;
@@ -302,6 +304,7 @@ DynamicArray<Point> graham_scan(DynamicArray<Point>* points) {
 
 int main()
 {
+    setlocale(LC_ALL, "");
     DynamicArray<Point>* punkty = pointsFromFile("../excercises/points2.txt");
 
     DynamicArray<Point> otoczka = graham_scan(punkty);
