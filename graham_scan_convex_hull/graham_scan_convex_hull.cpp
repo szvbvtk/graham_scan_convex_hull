@@ -113,20 +113,17 @@ double crossProduct(Point p1, Point p2) {
     return cross_product;
 }
 
-Point p_start;
-int cmp(const void* vp1, const void* vp2) {
-    Point* p1 = (Point*)vp1;
-    Point* p2 = (Point*)vp2;
-    double cp = crossProduct(*p1, *p2);
+int cmp(Point p1, Point p2) {
+    double cp = crossProduct(p1, p2);
 
     if (cp > 0)
         return 1;
     else if (cp < 0)
         return -1;
-    else 
+    else
         return 0;
 
-    
+
 }
 
 template <typename T>
@@ -245,6 +242,7 @@ DynamicArray<Point> graham_scan(DynamicArray<Point>* points) {
     // stworzenie kopii punktów
     DynamicArray<Point>* points_copy = new DynamicArray<Point>();
     DynamicArray<Point>* convex_hull = new DynamicArray<Point>();
+    Point p_start;
 
     for (int i = 0; i < points->getSize(); i++) {
         points_copy->add(points->get(i));
@@ -274,18 +272,7 @@ DynamicArray<Point> graham_scan(DynamicArray<Point>* points) {
         points_copy->change(i, points_copy->get(i) - p_start);
     }
 
-
-    qsort(&points_copy->array[1], points_copy->getSize() - 1, sizeof(Point), (int(*)(const void*, const void*)) cmp);
-
-    //for (int i = 0; i < points_copy->getSize(); i++) {
-    //    points_copy->change(i, points_copy->get(i) + p_start);
-    //}
-
-    //for (int i = 0; i < points_copy->getSize(); i++) {
-    //    cout << points_copy->get(i).x << ' ' << points_copy->get(i).y << '\n';
-    //}
-    //BinaryHeap<Point>(points_copy->array + 1, points_copy->getSize() - 1, crossProduct, 0); // nie wiem czy to zadziała, musi byc sortowanie od drugiego elementu
-    // dalej nie wiem co robić
+    BinaryHeap<Point>(points_copy->array + 1, points_copy->getSize() - 1, cmp); 
 
     for (int i = 0; i < points_copy->getSize(); i++) {
         points_copy->change(i, points_copy->get(i) + p_start);
@@ -299,20 +286,16 @@ DynamicArray<Point> graham_scan(DynamicArray<Point>* points) {
         int convex_size = convex_hull->getSize();
 
         while (convex_size >= 3 && crossProduct(convex_hull->get(convex_size - 1 - 1) - convex_hull->get(convex_size - 2 - 1), convex_hull->get(convex_size - 1) - convex_hull->get(convex_size - 2)) > 0) {
-            //convex_hull->swap(convex_size - 1, convex_size - 2);
-            convex_hull->array[convex_size - 2] = points_copy->get(i);
+            convex_hull->swap(convex_size - 1, convex_size - 2);
             convex_hull->del();
             convex_size--;
         }
     }
 
-    //for (int i = 0; i < convex_hull->getSize(); i++) {
-    //    convex_hull->change(i, points_copy->get(i) + p_start);
-    //}
-
     for (int i = 0; i < convex_hull->getSize(); i++) {
         cout << i+1 << ". " << convex_hull->get(i).x << ' ' << convex_hull->get(i).y << '\n';
     }
+
     delete points_copy;
     return *convex_hull;
 }
