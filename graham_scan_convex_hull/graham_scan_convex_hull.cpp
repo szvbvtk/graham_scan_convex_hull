@@ -293,10 +293,10 @@ DynamicArray<Point> graham_scan(DynamicArray<Point>* points) {
         }
     }
 
-    for (int i = 0; i < convex_hull->getSize(); i++) {
-        Point tmp = convex_hull->get(i);
-        cout << i+1 << ". Index punktu: " << tmp.index << " współrzędne punktu: " << tmp.x << ' ' << tmp.y << '\n';
-    }
+    //for (int i = 0; i < convex_hull->getSize(); i++) {
+    //    Point tmp = convex_hull->get(i);
+    //    cout << i+1 << ". Index punktu: " << tmp.index << " współrzędne punktu: " << tmp.x << ' ' << tmp.y << '\n';
+    //}
 
     delete points_copy;
     return *convex_hull;
@@ -309,8 +309,9 @@ int main()
 
     DynamicArray<Point> otoczka = graham_scan(punkty);
 
-    //for (int i = 0; i < otoczka.size; i++) {
-    //    cout << otoczka.get(i) << '\n';
-    //}
+    for (int i = 0; i < otoczka.getSize(); i++) {
+        Point tmp = otoczka.get(i);
+        cout << i + 1 << ". Index punktu: " << tmp.index << " współrzędne punktu: " << tmp.x << ' ' << tmp.y << '\n';
+    }
 }
 
